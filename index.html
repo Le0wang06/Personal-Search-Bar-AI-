@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Question Answer</title>
+    <style>
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+            border-top-color: #000;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        #searchInput {
+            padding: 10px;
+            width: 80%;
+            margin-right: 10px;
+        }
+
+        #searchButton {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #searchButton:hover {
+            background-color: #45a049;
+        }
+
+        #responseArea {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            min-height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <input type="text" id="searchInput" placeholder="Type your question here...">
+    <button id="searchButton">Search</button>
+    <div id="responseArea"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
+            const responseArea = document.getElementById('responseArea');
+
+            function showLoading() {
+                // Clear previous content
+                responseArea.innerHTML = '';
+                
+                // Add loading animation
+                const loadingDiv = document.createElement('div');
+                loadingDiv.className = 'loading';
+                responseArea.appendChild(loadingDiv);
+            }
+
+            function performSearch() {
+                const userInput = searchInput.value.trim();
+                if (!userInput) return;
+
+                showLoading();
+
+                fetch('https://api.deepseek.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer sk-87b6197ceca94a52b1d1ffd163a14876'
+                    },
+                    body: JSON.stringify({
+                        model: "deepseek-chat",
+                        messages: [{
+                            role: "user",
+                            content: userInput
+                        }]
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Remove loading animation and display result
+                    responseArea.innerHTML = data.choices[0].message.content;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    responseArea.innerHTML = 'An error occurred while processing your request.';
+                });
+            }
+
+            // Event listeners
+            searchButton.addEventListener('click', performSearch);
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') performSearch();
+            });
+
+            // Clear input and previous response when button is clicked
+            searchButton.addEventListener('click', () => {
+                searchInput.value = '';
+            });
+        });
+    </script>
+</body>
+</html>
