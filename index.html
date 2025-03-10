@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Question Answer</title>
     <style>
+        
         .loading {
             display: inline-block;
             width: 20px;
@@ -14,6 +15,7 @@
             border-radius: 50%;
             border-top-color: #000;
             animation: spin 1s ease-in-out infinite;
+            
         }
 
         @keyframes spin {
@@ -35,21 +37,28 @@
             cursor: pointer;
         }
 
+        
         #searchButton:hover {
             background-color: #45a049;
         }
 
+        
         #responseArea {
             margin-top: 20px;
             padding: 10px;
             border: 1px solid #ccc;
             min-height: 100px;
         }
+        
     </style>
+    
 </head>
 <body>
-    <input type="text" id="searchInput" placeholder="Type your question here...">
+    
+    <input type="text" id="searchInput" placeholder="Please ask me anythihng you want! I got the answer!">
+    
     <button id="searchButton">Search</button>
+    
     <div id="responseArea"></div>
 
     <script>
